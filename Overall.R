@@ -75,8 +75,8 @@ Stand.data(inputdata=Original,
            nameY="TenYearCHD",
            nameX="BMI",
            nameW="BMIself",
-           numberZ=6,
-           namesZ=c("male","age","totChol","sysBP", "BPMeds", "currentSmoker"))
+           numberZ=3,
+           namesZ=c("age","totChol","sysBP"))
 
 
 #--------------------------------------------------------------------#
