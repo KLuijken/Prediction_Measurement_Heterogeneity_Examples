@@ -37,16 +37,4 @@ Bas.tab <- function(Data,Original){
   abline(lm(Data$W~Data$X),col="black")
   dev.off()
   
-  tiff(paste(filepath,"/PlotXW_Axis.tiff", sep=""), width = 4, height = 4, units = 'in',res=200)
-  plot(Data$X,
-       Data$W, 
-       ylim= c(0,max(Data$X,Data$W)),
-       xlim= c(0,max(Data$X,Data$W)),
-       ylab = paste(label(Data$X)),
-       xlab = paste(label(Data$W)),
-       las=1,
-       cex.lab=0.75,
-       cex.axis=0.75)
-  abline(lm(Data$W~Data$X),col="black")
-  dev.off()
 }
