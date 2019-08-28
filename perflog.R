@@ -1,5 +1,3 @@
-
-
 Ridge <- function(data,meas){
   matrix <- as.matrix(cbind(data[meas],data[,4:(3+z)]))
   init <- glmnet(matrix,data$Y, family="binomial", alpha = 0)
@@ -59,10 +57,9 @@ Optcor <- function(perfmeas, optmeas, der,val){
 }
 
 Opti <- function(optmeas,der,val){
-  meanopt <- matrix(0,nrow=6,ncol=3)
-  rownames(meanopt) <- c("CalL", "Calslope", "C.stat", "Brier","BrierScaled","R2")
-  meanopt["CalL",] <- c(mean(optmeas[paste0(der,val),,"CalL"]), quantile(optmeas[paste0(der,val),,"CalL"], c(0.025,0.975), names=F))
-  meanopt["Calslope",] <- c(mean(optmeas[paste0(der,val),,"Calslope"]), quantile(optmeas[paste0(der,val),,"Calslope"], c(0.025,0.975), names=F))
+  meanopt <- matrix(0,nrow=4,ncol=3)
+  rownames(meanopt) <- c("C.stat", "Brier","BrierScaled","R2")
+  colnames(meanopt) <- c("average","CIlow", "CIup")
   meanopt["C.stat",] <- c(mean(optmeas[paste0(der,val),,"C.stat"]), quantile(optmeas[paste0(der,val),,"C.stat"], c(0.025,0.975), names=F))
   meanopt["Brier",] <- c(mean(optmeas[paste0(der,val),,"Brier"]), quantile(optmeas[paste0(der,val),,"Brier"], c(0.025,0.975), names=F))
   meanopt["BrierScaled",] <- c(mean(optmeas[paste0(der,val),,"BrierScaled"]), quantile(optmeas[paste0(der,val),,"BrierScaled"], c(0.025,0.975), names=F))
@@ -335,10 +332,10 @@ Perf.log <- function(Data,B){
   
   # Create table model coefficients total sample
   Derperf <- data.frame(matrix(nrow=z+9,ncol=9))
-  colnames(Derperf) <- c("Parameter", "Estimates of OR/HR when X is used", "95% CI, lower","95% CI, upper",	
-                         "Shrunk/penalized estimates of OR/HR when X is used",
-                         "Estimates of OR/HR when W is used","95% CI, lower","95% CI, upper",
-                         "Shrunk/penalized estimates of OR/HR when W is used")
+  colnames(Derperf) <- c("Parameter", "Estimates of OR when X is used", "95% CI, lower","95% CI, upper",	
+                         "Shrunk/penalized estimates of OR when X is used",
+                         "Estimates of OR when W is used","95% CI, lower","95% CI, upper",
+                         "Shrunk/penalized estimates of OR when W is used")
   Derperf[,1] <- c("N","Intercept", Hmisc::label(Data$X), Hmisc::label(Data$W),Hmisc::label(Data[,4:(3+z)]),"Model performance measures", "(Nagelkerke's) R2","C-statistic", "Brier score", "Scaled Brier score")
   Derperf[1,2] <- sum(MX.lrm$freq)
   Derperf[1,6] <- sum(MW.lrm$freq)
@@ -385,26 +382,20 @@ Perf.log <- function(Data,B){
   Opti(Optimism.heterog,"W","X")
   
   # Save deltas
-  deltab <- data.frame(matrix(0,nrow=12,ncol=3))
-  rownames(deltab) <- c("DeltaCalLXW","DeltaCalLWX","DeltaCalslopeXW","DeltaCalslopeWX","DeltaCXW",'DeltaCWX', "DeltaBrierXW","DeltaBrierWX", "DeltaBrierscaledXW","DeltaBrierscaledWX", "DeltaR2XW","DeltaR2WX")
-  for(i in 1:4){
-    deltab[i,] <- c(median(Delta[,i]),quantile(Delta[,i],c(0.025,0.975),names=F))
-  }
-  for(j in 5:12){
+  deltab <- data.frame(matrix(0,nrow=8,ncol=3))
+  rownames(deltab) <- c("DeltaCXW",'DeltaCWX', "DeltaBrierXW","DeltaBrierWX", "DeltaBrierscaledXW","DeltaBrierscaledWX", "DeltaR2XW","DeltaR2WX")
+  colnames(deltab) <- c("average","CIlow", "CIup")
+  for(j in 1:nrow(deltab)){
     deltab[j,] <- c(mean(Delta[,j]),quantile(Delta[,j],c(0.025,0.975),names=F))
   }
   print(xtable(deltab,digits=10),file=file.path(filepath,"Deltas.txt"), compress=F)
   
-  deltab.shrink <- data.frame(matrix(0,nrow=12,ncol=3))
-  rownames(deltab.shrink) <- c("DeltaCalLXW","DeltaCalLWX","DeltaCalslopeXW","DeltaCalslopeWX","DeltaCXW","DeltaCWX","DeltaBrierXW","DeltaBrierWX", "DeltaBrierscaledXW","DeltaBrierscaledWX", "DeltaR2XW","DeltaR2WX")
-  for(i in 1:4){
-    deltab.shrink[i,] <- c(median(Delta.ridge[,i]),quantile(Delta.ridge[,i],c(0.025,0.975),names=F))
-  }
-  for(j in 5:12){
+  deltab.shrink <- data.frame(matrix(0,nrow=8,ncol=3))
+  rownames(deltab.shrink) <- c("DeltaCXW","DeltaCWX","DeltaBrierXW","DeltaBrierWX", "DeltaBrierscaledXW","DeltaBrierscaledWX", "DeltaR2XW","DeltaR2WX")
+  colnames(deltab.shrink) <- c("average","CIlow", "CIup")
+  for(j in 1:nrow(deltab.shrink)){
     deltab.shrink[j,] <- c(mean(Delta.ridge[,j]),quantile(Delta.ridge[,j],c(0.025,0.975),names=F))
   }
   
   print(xtable(deltab.shrink,digits=10),file=file.path(filepath,"Deltas_shrink.txt"), compress=F)
 }
-
-
