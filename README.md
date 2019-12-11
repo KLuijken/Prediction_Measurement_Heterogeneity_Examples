@@ -1,6 +1,6 @@
 # Prediction_Measurement_Heterogeneity_Examples
 
-This code accompanies the paper "Changing predictor measurement procedures affected the performance of prediction models in clinical examples" (https://osf.io/xmdtr/). To reproduce the code, open the R-project and source all relevant code using the "Overall.R"-file.
+This code accompanies the paper "Changing predictor measurement procedures affected the performance of prediction models in clinical examples" (https://doi.org/10.1016/j.jclinepi.2019.11.001). To reproduce the code, open the R-project and source all relevant code using the "Overall.R"-file.
 <br>
 <br>
 <br>
