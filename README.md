@@ -1,8 +1,6 @@
 # Prediction_Measurement_Heterogeneity_Examples
 
-# CICovsel
-
-## Version 0.1.0
+## Version 1.1.0
 Code of the data analysis from the manuscript "Changing predictor measurement procedures affected the performance of prediction models in clinical examples" (https://doi.org/10.1016/j.jclinepi.2019.11.001).
 
 ## Run entire analysis at once
@@ -13,10 +11,13 @@ The R code in ./rcode/visualisation creates figures depicting the results of the
 
 Attached packages:
 rms [version]
+glmnet [version]
+xtable [version]
+summarytools [version]
 
 When data are simulated:
 MASS [version] 
-
+Matrix [version]
 
 ## Project organization
 
