@@ -2,7 +2,7 @@
 # Predictor measurement heterogeneity empirical
 # K Luijken
 #
-# Helper function to standardize the input data frame
+# Function to standardize the input data frame
 #------------------------------------------------------------------------------#
 
 standardize_data <-function(inputdata,nameY,nameX,nameW,numberZ, namesZ){
