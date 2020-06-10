@@ -14,6 +14,8 @@ adjusted_val.prob <- function (p, y, logit, group, weights = rep(1, length(y)), 
                          cex = 1, mkh = 0.02, connect.group = FALSE, connect.smooth = TRUE, 
                          g.group = 4, evaluate = 100, nmin = 0) 
 {
+  p <- expit(p)
+  
   if (missing(p)) 
     p <- plogis(logit)
   else logit <- qlogis(p)
