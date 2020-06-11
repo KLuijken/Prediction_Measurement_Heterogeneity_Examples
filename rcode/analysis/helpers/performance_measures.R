@@ -15,10 +15,10 @@ estimate_lp <- function(data,
                            validation_predictor){
   covariates <- colnames(data)[!(colnames(data) %in% c("Y","X","W"))]
   lp         <- switch(method,
-                       ML = predict(model, 
+                       as.character(ML) = predict(model, 
                                     as.matrix(cbind(data[validation_predictor],
                                                     data[,c(covariates)]))),
-                       Ridge = predict(model, 
+                       as.character(Ridge) = predict(model, 
                                        type = "link",
                                        as.matrix(cbind(data[validation_predictor],
                                                        data[,c(covariates)])),
@@ -70,7 +70,7 @@ estimate_pseudoR2 <- function(lp, data){
 
 estimate_R2 <- function(data, model, method, lp){
   R2 <- switch(method,
-                  ML = model$stats[["R2"]],
-                  Ridge = estimate_pseudoR2(lp = lp,
+                  as.character(ML) = model$stats[["R2"]],
+                  as.character(Ridge) = estimate_pseudoR2(lp = lp,
                                             data = data))
 }

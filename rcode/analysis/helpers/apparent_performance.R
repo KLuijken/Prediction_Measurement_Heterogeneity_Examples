@@ -5,10 +5,10 @@
 # Workflow helper functions to obtain measures of apparent predictive performance
 #------------------------------------------------------------------------------#
 
-apparent_performance <- function(data,
-                                 method,
+apparent_performance <- function(method,
                                  derivation_predictor, 
-                                 validation_predictor){
+                                 validation_predictor,
+                                 data){
   # Estimate model (switch Maximum Likelihood versus Ridge)
   model    <- estimate_model(data = data,
                              method = method,
@@ -31,7 +31,7 @@ apparent_performance <- function(data,
                                           method = method,
                                           lp = lp))
   # Save measures and output
-  saveRDS(apparent, file = paste0("./results/analysis/",method,"_apparent_perf_",
+  saveRDS(results_apparent, file = paste0("./results/analysis/",method,"_apparent_perf_",
                                   derivation_predictor,".rds"))
   
   pdf(paste("./results/analysis/",method,"_apparent_perf_",
