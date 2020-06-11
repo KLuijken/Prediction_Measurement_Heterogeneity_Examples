@@ -39,6 +39,6 @@ apparent_performance <- function(method,
   adjusted_val.prob(lp,data$Y)
   dev.off()
   
-  
+  return(results_apparent)
 }
 
