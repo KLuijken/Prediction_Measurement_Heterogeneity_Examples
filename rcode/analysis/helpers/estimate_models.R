@@ -33,9 +33,9 @@ estimate_model <- function(data, method, derivation_predictor){
   covariates <- colnames(data)[!(colnames(data) %in% c("Y","X","W"))]
   
   model <- switch(method,
-                  as.character(ML) = lrm(reformulate(termlabels = c(derivation_predictor,
+                  ML = lrm(reformulate(termlabels = c(derivation_predictor,
                                            covariates),
                             response = "Y"), data = data),
-                  as.character(Ridge) = estimate_ridge(data = data,
+                  Ridge = estimate_ridge(data = data,
                               derivation_predictor = derivation_predictor))
 }
