@@ -27,25 +27,6 @@ estimate_lp <- function(data,
   return(lp)
 }
 
-# Estimate c-statistic
-estimate_cstat <- function(lp, Y){
-  expit_lp  <- expit(lp)
-  expit_lp <- as.matrix(expit_lp)
-  cats <- sort(unique(Y))
-  n_cat <- length(cats)
-  n0   <- sum(Y == cats[2])
-  n1   <- length(Y) - n0
-  r <- rank(expit_lp[,1])
-  S0 <- sum(as.numeric(r[Y == cats[2]]))
-  (S0 - n0 * (n0 + 1)/2)/(as.numeric(n0) * as.numeric(n1))
-}
-
-# Compute Brier score
-compute_brier <- function(lp, Y){
-  expit_lp <- expit(lp)
-  sum((Y-expit_lp)^2)/length(expit_lp)
-}
-
 # Compute scaled Brier score
 scale_brier <- function(lp, Brierscore){
   expit_lp     <- expit(lp)
@@ -55,19 +36,23 @@ scale_brier <- function(lp, Brierscore){
   return(BrierScaled)
 }
 
-# Calibration
-estimate_calibrationLarge <- function(lp, Y){
-  calibration <- glm(Y~offset(lp), family = "binomial")
-  calLarge    <- calibration$coefficients[1]
+# Estimate performance measures
+estimate_performance <- function(lp, Y){
+  pred  <- expit(lp)
+  store <- val.prob(pred, Y)
   
-  return(calLarge)
-}
+  cal_large    <- as.numeric(store[["Intercept"]])
+  cal_slope    <- as.numeric(store[["Slope"]])
+  c_stat       <- as.numeric(store[["C (ROC)"]])
+  Brier        <- as.numeric(store[["Brier"]])
+  Brier_scaled <- scale_brier(pred, Brier)
+  
 
-estimate_calibrationslope <- function(lp, Y){
-  calibration <- glm(Y~lp, family = "binomial")
-  calslope    <- calibration$coefficients[2]
-  
-  return(calslope)
+  return(list(cal_large = cal_large,
+           cal_slope = cal_slope,
+           c_stat = c_stat,
+           Brier = Brier,
+           Brier_scaled = Brier_scaled))
 }
 
 # R squared
@@ -89,6 +74,3 @@ estimate_R2 <- function(data, model, method, lp){
                   Ridge = estimate_pseudoR2(lp = lp,
                                             data = data))
 }
-
-
-

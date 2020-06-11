@@ -2,8 +2,7 @@
 # Predictor measurement heterogeneity empirical
 # K Luijken
 #
-# Helper function to estimate ridge regression models and to obtain estimated 
-# predictive performance measures
+# Helper functions to estimate logistic regression and ridge regression models 
 #------------------------------------------------------------------------------#
 
 # Fit Ridge model
@@ -40,54 +39,3 @@ estimate_model <- function(data, method, derivation_predictor){
        Ridge = estimate_ridge(data = data,
                               derivation_predictor = derivation_predictor))
 }
-
-
-
-# # Estimate linear predictor
-# estimate_lp_ridge <- function(data, 
-#                            model, 
-#                            validation_predictor){
-#   covariates <- colnames(data)[!(colnames(data) %in% c("Y","X","W"))]
-#   lp         <- predict(model, 
-#                         type = "link",
-#                         as.matrix(cbind(data[validation_predictor],
-#                                         data[,c(covariates)])),
-#                         s = model$lambda[1])
-#   expit_lp     <- expit(lp)
-#   
-#   return(expit_lp)
-# }
-# 
-# # Estimate c-statistic
-# c_stat_rigde <- function(lp, Y){
-#   lp <- as.matrix(lp)
-#   cats <- sort(unique(Y))
-#   n_cat <- length(cats)
-#   n0   <- sum(Y == cats[2])
-#   n1   <- length(Y) - n0
-#   r <- rank(lp[,1])
-#   S0 <- sum(as.numeric(r[Y == cats[2]]))
-#   (S0 - n0 * (n0 + 1)/2)/(as.numeric(n0) * as.numeric(n1))
-# }
-# 
-# # Compute Brier score
-# brier_ridge <- function(lp, data){
-#   sum((data[,"y"]-lp)^2)/length(lp)
-# }
-# 
-# # Compute scaled Brier score
-# scale_brier <- function(lp, Brierscore){
-#   pred         <- plogis(lp)
-#   BrierMax     <- mean(pred) * (1-mean(pred))
-#   BrierScaled  <- as.numeric((1-(Brierscore/ BrierMax)))
-#   
-#   return(BrierScaled)
-# }
-# 
-# # Calibration
-# calibration_ridge <- function(lp, Y){
-#   calibration <- coef(glm(Y~lp, family = "binomial"))
-#   
-#   return(calibration)
-# }
-
