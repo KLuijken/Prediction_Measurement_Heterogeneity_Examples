@@ -21,7 +21,7 @@ apparent_performance <- function(method,
                           validation_predictor = validation_predictor)
   store_apparent   <- estimate_performance(lp = lp, Y = data[,"Y"])
   
-  results_apparent <- data.frame(cal_large = store_apparent$cal_large,
+  results_apparent <- data.table(cal_large = store_apparent$cal_large,
                          cal_slope = store_apparent$cal_slope,
                          c_stat = store_apparent$c_stat,
                          Brier = store_apparent$Brier,

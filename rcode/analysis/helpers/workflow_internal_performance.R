@@ -8,31 +8,26 @@
 # Helpers ----
 #------------------------------------------------------------------------------#
 
-# Save measures and output
-saveRDS(results_apparent, file = paste0("./results/analysis/",method,"/",method,"_internal_perf_",
-                                        derivation_predictor,".rds"))
-
-save_result <- function(result){
-  file_name <- result[['file_name']]
-  # append new result to old results if file exists
-  if (file.exists(file_name)){
-    con <- file(file_name)
+save_result <- function(results){
+  filepath <- results$file_name
+  
+  if (file.exists(filepath)){
+    con <- file(filepath)
     while (isOpen(con)){
       Sys.sleep(2)
     }
-    open(con)
-    results_in_file <- readRDS(file_name)
-    new_results <- rbind(results_in_file, 
-                         result)
-    rownames(new_results) <- NULL
-    saveRDS(new_results, file = file_name)
-    close(con)
+  open(con)
+  results_in_file <- readRDS(filepath)
+  new_results <- rbind(results_in_file, 
+                       results)
+  rownames(new_results) <- NULL
+  saveRDS(new_results, file = filepath)
+  close(con)
   } else{ #create new file
-    saveRDS(result, file = file_name)}
+    saveRDS(results, file = filepath)}
+  
 }
 
-
-# Summarize
 
 # Workhorse function internal performance ----
 #------------------------------------------------------------------------------#
@@ -55,7 +50,7 @@ internal_performance <- function(method,
                     validation_predictor = validation_predictor)
   store_internal   <- estimate_performance(lp = lp, Y = data[,"Y"])
   
-  results_internal <- data.frame(cal_large = store_internal$cal_large,
+  results_internal <- data.table(cal_large = store_internal$cal_large,
                                  cal_slope = store_internal$cal_slope,
                                  c_stat = store_internal$c_stat,
                                  Brier = store_internal$Brier,
@@ -65,6 +60,7 @@ internal_performance <- function(method,
                                                   method = method,
                                                   lp = lp))
   
+  # estimate optimism
   optimism <- results_internal - results_apparent
   colnames(optimism) <- paste0("opt_",colnames(results_internal))
   
@@ -73,20 +69,22 @@ internal_performance <- function(method,
                             seed = seed,
                             file_name = paste0("./results/analysis/",method,"/",
                                                method,"_internal_perf_",
-                                               derivation_predictor,".rds"))
+                                               derivation_predictor,
+                                               validation_predictor,".rds"))
   
   save_result(results_internal)
   
+  # store calibration slope coordinates for plotting
   expit_lp <- expit(lp)
   calibrationslopex <- lowess(expit_lp,
                              data[,"Y"],
                              iter=0)$x[c(seq(from = 1, to = nrow(data),
                                              by = round(nrow(data)/20)),
                                          nrow(data))]
-  calibrationslopex <- cbind(seed = seed, 
-                            calibrationslope,
-                            file_name = paste0("./results/analysis/calibrationslope/",
-                     method,"_calibrationslope_xaxis.rds"))
+  calibrationslopex <- data.table(cbind(seed = seed, 
+                             t(calibrationslopex),
+                            file_name = paste0("./results/analysis/calslope/",
+                     method,"_calslope_x.rds")))
   save_result(calibrationslopex)
   
   calibrationslopey <- lowess(expit_lp,
@@ -94,10 +92,10 @@ internal_performance <- function(method,
                               iter=0)$y[c(seq(from = 1, to = nrow(data),
                                               by = round(nrow(data)/20)),
                                           nrow(data))]
-  calibrationslopey <- cbind(seed = seed, 
-                             calibrationslope,
-                             file_name = paste0("./results/analysis/calibrationslope/",
-                                                method,"_calibrationslope_yaxis.rds"))
+  calibrationslopey <- data.table(cbind(seed = seed, 
+                             t(calibrationslopey),
+                             file_name = paste0("./results/analysis/calslope/",
+                                                method,"_calslope_y.rds")))
   save_result(calibrationslopey)
 
 }
