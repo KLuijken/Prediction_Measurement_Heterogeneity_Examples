@@ -11,6 +11,7 @@
 source(file = "./rcode/packages/packages.R")
 source(file = "./rcode/analysis/standardize_data.R")
 source(file = "./rcode/analysis/descriptives.R")
+source(file = "./rcode/analysis/analyse_data.R")
 
 # Load data  ----
 #------------------------------------------------------------------------------#
