@@ -67,8 +67,8 @@ internal_performance <- function(method,
   results_internal <- cbind(results_internal,
                             optimism,
                             seed = seed,
-                            file_name = paste0("./results/analysis/",method,"/",
-                                               method,"_internal_perf_",
+                            file_name = paste0("./results/analysis/",method,
+                                               "/internal_perf_",
                                                derivation_predictor,
                                                validation_predictor,".rds"))
   

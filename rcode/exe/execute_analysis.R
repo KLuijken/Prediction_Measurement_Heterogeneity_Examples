@@ -63,3 +63,15 @@ apply(use_analysis_scenarios,
       data = data,
       bootstrap_rep = 5,
       seeds = seeds)
+
+
+# Generate table (main text article)  ----
+#------------------------------------------------------------------------------#
+
+
+# Generate summary figure (main text article)  ----
+#------------------------------------------------------------------------------#
+
+
+# Generate calibration plot (supplementary file)  ----
+#------------------------------------------------------------------------------#
