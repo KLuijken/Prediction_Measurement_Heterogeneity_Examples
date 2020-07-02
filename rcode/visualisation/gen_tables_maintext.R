@@ -50,43 +50,60 @@ process_results_homogeneity <- function(method, derivation_predictor, validation
   
   confidence_intervals_upper <- round(confidence_intervals_upper, digits = 2)
   
-  return(list(point_estimates, confidence_intervals_lower, confidence_intervals_upper))
+  return(list(point_estimates = point_estimates,
+              confidence_intervals_lower = confidence_intervals_lower,
+              confidence_intervals_upper = confidence_intervals_upper))
 }
-
-process_results_homogeneity(method = "ML",
-                            derivation_predictor = "X",
-                            validation_predictor = "X",
-                            data = data)
 
 
 # Generate table measurement homogeneity  ----
 #------------------------------------------------------------------------------#
 
-generate_one_row <- function(method, derivation_predictor, validation_predictor, data){
-  performance <- paste0("./results/analysis/",method,
-                        "/internal_perf_",
-                        derivation_predictor,
-                        validation_predictor,".rds")
-  
+generate_one_row_homogeneity <- function(method, derivation_predictor, validation_predictor, data){
+  performance <- process_results_homogeneity(method = method,
+                                              derivation_predictor = derivation_predictor,
+                                              validation_predictor = validation_predictor,
+                                              data = data)
+
   result_row <- data.frame(Event_fraction = nrow(data[data$Y==1,])/nrow(data),
-                           Measurement_strategy = Hmisc::label(data$X),
-                           Mean_value_measurement = round(mean(data$X),
+                           Measurement_strategy = paste0(Hmisc::label(data[,derivation_predictor]),
+                                                         ifelse(derivation_predictor == "X",
+                                                                " (preferred)",
+                                                                " (pragmatic)")),
+                           Mean_value_measurement = round(mean(data[,derivation_predictor]),
                                                           digits = 2),
                            Standard_deviation_measurement = round(
-                             sd(data$X), digits = 2),
-                           C_statistic = round(performance$c_stat, digits = 2),
-                           Scaled_Brier_score = round(performance$Brier_scaled,
-                                                      digits = 2))
-  result_row <- round(result_row, digits = 2)
-  
+                             sd(data[,derivation_predictor]), digits = 2),
+                           C_statistic = paste0(performance$point_estimates$c_stat,
+                                                " (95% CI,",
+                                                performance$confidence_intervals_lower$c_stat,
+                                                "; ",
+                                                performance$confidence_intervals_upper$c_stat,
+                                                ")"),
+                           Scaled_Brier_score = paste0(performance$point_estimates$Brier_scaled,
+                                                       " (95% CI,",
+                                                       performance$confidence_intervals_lower$Brier_scaled,
+                                                       "; ",
+                                                       performance$confidence_intervals_upper$Brier_scaled,
+                                                       ")"))
   return(result_row)
 }
 
+# Generate complete table
+table_homogeneity <- rbind(
+  generate_one_row_homogeneity(method = "ML",
+                               derivation_predictor = "X",
+                               validation_predictor = "X",
+                               data = data),
+  generate_one_row_homogeneity(method = "ML",
+                               derivation_predictor = "W",
+                               validation_predictor = "W",
+                               data = data)
+)
 
-
-generate_one_row(method = "ML",
-                 derivation_predictor = "X",
-                 data = data)
+print(xtable(table_homogeneity),
+      file = "./results/tables/measurement_homogeneity.txt",
+      include.rownames = FALSE)
 
 # Load results
 apparent <- do.call('rbind', lapply(

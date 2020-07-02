@@ -43,6 +43,9 @@ analyze_descriptives(standardized = data,
 # Analyse data: apparent and internal predictive performance  ----
 #------------------------------------------------------------------------------#
 
+# Set number of bootstrap repetitions
+bootstrap_rep <- 10
+
 # Store seeds
 set.seed(57)
 seeds <- sample(1:100000000, size= bootstrap_rep, replace=F)
@@ -61,7 +64,7 @@ apply(use_analysis_scenarios,
       MARGIN = 1,
       FUN = analyse_data,
       data = data,
-      bootstrap_rep = 5,
+      bootstrap_rep = bootstrap_rep,
       seeds = seeds)
 
 
