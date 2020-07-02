@@ -43,28 +43,28 @@ internal_performance <- function(method,
                              method = method,
                              derivation_predictor = derivation_predictor)
   
-  # Estimate apparent performance (switch Maximum Likelihood versus Ridge)
+  # Estimate performance in bootstrap sample (switch Maximum Likelihood versus Ridge)
   lp <- estimate_lp(data = data,
                     model = model,
                     method =  method,
                     validation_predictor = validation_predictor)
-  store_internal   <- estimate_performance(lp = lp, Y = data[,"Y"])
+  store_bootstrap   <- estimate_performance(lp = lp, Y = data[,"Y"])
   
-  results_internal <- data.table(cal_large = store_internal$cal_large,
-                                 cal_slope = store_internal$cal_slope,
-                                 c_stat = store_internal$c_stat,
-                                 Brier = store_internal$Brier,
-                                 Brier_scaled = store_internal$Brier_scaled,
+  results_bootstrap <- data.table(cal_large = store_bootstrap$cal_large,
+                                 cal_slope = store_bootstrap$cal_slope,
+                                 c_stat = store_bootstrap$c_stat,
+                                 Brier = store_bootstrap$Brier,
+                                 Brier_scaled = store_bootstrap$Brier_scaled,
                                  R2 = estimate_R2(data =  data,
                                                   model =  model,
                                                   method = method,
                                                   lp = lp))
   
   # estimate optimism
-  optimism <- results_internal - results_apparent
-  colnames(optimism) <- paste0("opt_",colnames(results_internal))
+  optimism <- results_bootstrap - results_apparent
+  colnames(optimism) <- paste0("opt_",colnames(results_bootstrap))
   
-  results_internal <- cbind(results_internal,
+  results_internal <- cbind(results_bootstrap,
                             optimism,
                             seed = seed,
                             file_name = paste0("./results/analysis/",method,
