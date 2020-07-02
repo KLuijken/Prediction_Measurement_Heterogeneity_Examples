@@ -13,6 +13,7 @@ source(file = "./rcode/analysis/standardize_data.R")
 source(file = "./rcode/analysis/descriptives.R")
 source(file = "./rcode/analysis/analyse_data.R")
 source(file = "./rcode/visualisation/gen_tables_maintext.R")
+source(file = "./rcode/visualisation/gen_graph_maintext.R")
 
 # Load data  ----
 #------------------------------------------------------------------------------#
@@ -106,7 +107,7 @@ print(xtable(table_heterogeneity),
 
 # Generate summary figure (main text article)  ----
 #------------------------------------------------------------------------------#
-
+perf_plot_calLarge()
 
 # Generate calibration plot (supplementary file)  ----
 #------------------------------------------------------------------------------#
