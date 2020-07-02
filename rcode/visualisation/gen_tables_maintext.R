@@ -5,7 +5,7 @@
 # Generate tables
 #------------------------------------------------------------------------------#
 
-# Helper ----
+# Helpers ----
 #------------------------------------------------------------------------------#
 
 process_results_homogeneity <- function(method, derivation_predictor, validation_predictor, data){
@@ -55,15 +55,62 @@ process_results_homogeneity <- function(method, derivation_predictor, validation
               confidence_intervals_upper = confidence_intervals_upper))
 }
 
+process_results_heterogeneity <- function(method, derivation_predictor, validation_predictor, data){
+  # Load results
+  heterogeneity <- readRDS(paste0("./results/analysis/",method,
+                              "/internal_perf_",
+                              derivation_predictor,
+                              validation_predictor,".rds"))
+  
+  homogeneity   <- readRDS(paste0("./results/analysis/",method,
+                                 "/internal_perf_",
+                                 derivation_predictor,
+                                 derivation_predictor,".rds"))
+  
+  # Obtain measures averaged over bootstrap
+  # Median for calibration measures (skewed performance measure)
+  # Mean for c-stat and Brier score. Subtract optimism from apparent measure (optimism correction)
+  point_estimates <- data.frame(cal_large = median(heterogeneity$cal_large),
+                                cal_slope = median(heterogeneity$cal_slope),
+                                c_stat = mean(heterogeneity$c_stat - homogeneity$c_stat),
+                                Brier_scaled = mean(heterogeneity$Brier_scaled - 
+                                                      homogeneity$Brier_scaled))
+  
+  point_estimates <- round(point_estimates, digits = 3)
+  
+  # Obtain confidence intervals throug percentiles
+  # Correct c-statistic and Brier score for optimism
+  confidence_intervals_lower <- data.frame(cal_large = quantile(heterogeneity$cal_large, 0.025, names = F),
+                                           cal_slope = quantile(heterogeneity$cal_slope, 0.025, names = F),
+                                           c_stat = quantile(heterogeneity$c_stat - homogeneity$c_stat,
+                                                             0.025, names = F),
+                                           Brier_scaled = quantile(heterogeneity$Brier_scaled - 
+                                                                     homogeneity$Brier_scaled, 0.025, names = F))
+  
+  confidence_intervals_lower <- round(confidence_intervals_lower, digits = 3)
+  
+  confidence_intervals_upper <- data.frame(cal_large = quantile(heterogeneity$cal_large, 0.975, names = F),
+                                           cal_slope = quantile(heterogeneity$cal_slope, 0.975, names = F),
+                                           c_stat = quantile(heterogeneity$c_stat - homogeneity$c_stat,
+                                                             0.975, names = F),
+                                           Brier_scaled = quantile(heterogeneity$Brier_scaled - 
+                                                                     homogeneity$Brier_scaled, 0.975, names = F))
+  
+  confidence_intervals_upper <- round(confidence_intervals_upper, digits = 3)
+  
+  return(list(point_estimates = point_estimates,
+              confidence_intervals_lower = confidence_intervals_lower,
+              confidence_intervals_upper = confidence_intervals_upper))
+}
 
 # Generate table measurement homogeneity  ----
 #------------------------------------------------------------------------------#
 
 generate_one_row_homogeneity <- function(method, derivation_predictor, validation_predictor, data){
   performance <- process_results_homogeneity(method = method,
-                                              derivation_predictor = derivation_predictor,
-                                              validation_predictor = validation_predictor,
-                                              data = data)
+                                  derivation_predictor = derivation_predictor,
+                                  validation_predictor = validation_predictor,
+                                  data = data)
 
   result_row <- data.frame(Event_fraction = nrow(data[data$Y==1,])/nrow(data),
                            Measurement_strategy = paste0(Hmisc::label(data[,derivation_predictor]),
@@ -89,26 +136,46 @@ generate_one_row_homogeneity <- function(method, derivation_predictor, validatio
   return(result_row)
 }
 
-# Generate complete table
-table_homogeneity <- rbind(
-  generate_one_row_homogeneity(method = "ML",
-                               derivation_predictor = "X",
-                               validation_predictor = "X",
-                               data = data),
-  generate_one_row_homogeneity(method = "ML",
-                               derivation_predictor = "W",
-                               validation_predictor = "W",
-                               data = data)
-)
 
-print(xtable(table_homogeneity),
-      file = "./results/tables/measurement_homogeneity.txt",
-      include.rownames = FALSE)
+# Generate table measurement heterogeneity  ----
+#------------------------------------------------------------------------------#
 
-# Load results
-apparent <- do.call('rbind', lapply(
-  list("./results/analysis/ML_apparent_perf_X.rds",
-       "./results/analysis/ML_apparent_perf_W.rds"), readRDS))
+generate_one_row_heterogeneity <- function(method, derivation_predictor, validation_predictor, data){
+  performance <- process_results_heterogeneity(method = method,
+                                 derivation_predictor = derivation_predictor,
+                                 validation_predictor = validation_predictor,
+                                 data = data)
+  
+  result_row <- data.frame(Measurement_strategy_at_derivation = Hmisc::label(data[,derivation_predictor]),
+                           Measurement_strategy_at_validation = Hmisc::label(data[,validation_predictor]),
+                           partial_corr = round(readRDS("./results/descriptives/part_corr.rds"),
+                                                          digits = 2),
+                           cal_large = paste0(performance$point_estimates$cal_large,
+                                              " (95% CI,",
+                                              performance$confidence_intervals_lower$cal_large,
+                                              "; ",
+                                              performance$confidence_intervals_upper$cal_large,
+                                              ")"),
+                           cal_slope = paste0(performance$point_estimates$cal_slope,
+                                              " (95% CI,",
+                                              performance$confidence_intervals_lower$cal_slope,
+                                              "; ",
+                                              performance$confidence_intervals_upper$cal_slope,
+                                              ")"),
+                           delta_C_statistic = paste0(performance$point_estimates$c_stat,
+                                                " (95% CI,",
+                                                performance$confidence_intervals_lower$c_stat,
+                                                "; ",
+                                                performance$confidence_intervals_upper$c_stat,
+                                                ")"),
+                           delta_Scaled_Brier_score = paste0(performance$point_estimates$Brier_scaled,
+                                                       " (95% CI,",
+                                                       performance$confidence_intervals_lower$Brier_scaled,
+                                                       "; ",
+                                                       performance$confidence_intervals_upper$Brier_scaled,
+                                                       ")"))
+  return(result_row)
+}
 
 
 
@@ -116,10 +183,7 @@ apparent <- do.call('rbind', lapply(
 
 
 
-# Apparent
-Standard deviation measurement	
 
-# Internal
-Scenario	Measurement strategy at derivation	Measurement strategy at validation	ρpart	Calibration-in-the-large	Calibration slope	ΔC-statistic a100	Δ scaled brier score
 
-"./results/descriptives/part_corr.rds"
+
+

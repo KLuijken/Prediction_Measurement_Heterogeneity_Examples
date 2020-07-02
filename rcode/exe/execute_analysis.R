@@ -12,6 +12,7 @@ source(file = "./rcode/packages/packages.R")
 source(file = "./rcode/analysis/standardize_data.R")
 source(file = "./rcode/analysis/descriptives.R")
 source(file = "./rcode/analysis/analyse_data.R")
+source(file = "./rcode/visualisation/gen_tables_maintext.R")
 
 # Load data  ----
 #------------------------------------------------------------------------------#
@@ -59,7 +60,6 @@ use_analysis_scenarios <- expand.grid(method = c("ML", "Ridge"),
 # Store apparent performance in .results/analysis/method/method_apparent_perf.rds
 # Store internal performance in .results/analysis/method/method_internal_perf.rds,
 # including coordinates for calibrationslopes in .results/analysis/calslope/
-
 apply(use_analysis_scenarios,
       MARGIN = 1,
       FUN = analyse_data,
@@ -71,6 +71,38 @@ apply(use_analysis_scenarios,
 # Generate table (main text article)  ----
 #------------------------------------------------------------------------------#
 
+# Generate table measurement homogeneity
+table_homogeneity <- rbind(
+   generate_one_row_homogeneity(method = "ML",
+                                derivation_predictor = "X",
+                                validation_predictor = "X",
+                                data = data),
+   generate_one_row_homogeneity(method = "ML",
+                                derivation_predictor = "W",
+                                validation_predictor = "W",
+                                data = data)
+)
+
+print(xtable(table_homogeneity),
+      file = "./results/tables/measurement_homogeneity.txt",
+      include.rownames = FALSE)
+
+
+# Generate table measurement heterogeneity
+table_heterogeneity <- rbind(
+   generate_one_row_heterogeneity(method = "ML",
+                                  derivation_predictor = "X",
+                                  validation_predictor = "W",
+                                  data = data),
+   generate_one_row_heterogeneity(method = "ML",
+                                  derivation_predictor = "W",
+                                  validation_predictor = "X",
+                                  data = data)
+)
+
+print(xtable(table_heterogeneity),
+      file = "./results/tables/measurement_heterogeneity.txt",
+      include.rownames = FALSE)
 
 # Generate summary figure (main text article)  ----
 #------------------------------------------------------------------------------#
