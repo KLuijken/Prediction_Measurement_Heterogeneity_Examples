@@ -10,12 +10,12 @@
 
 process_results_homogeneity <- function(method, derivation_predictor, validation_predictor, data){
   # Load results
-  bootstrap <- readRDS(paste0("./results/analysis/",method,
+  bootstrap <- readRDS(paste0("./data/analysis/",method,
                               "/internal_perf_",
                               derivation_predictor,
                               validation_predictor,".rds"))
   
-  apparent  <- readRDS(paste0("./results/analysis/",method,
+  apparent  <- readRDS(paste0("./data/analysis/",method,
                               "/apparent_perf_",
                               derivation_predictor,".rds"))
   
@@ -57,12 +57,12 @@ process_results_homogeneity <- function(method, derivation_predictor, validation
 
 process_results_heterogeneity <- function(method, derivation_predictor, validation_predictor, data){
   # Load results
-  heterogeneity <- readRDS(paste0("./results/analysis/",method,
+  heterogeneity <- readRDS(paste0("./data/analysis/",method,
                                   "/internal_perf_",
                                   derivation_predictor,
                                   validation_predictor,".rds"))
   
-  homogeneity   <- readRDS(paste0("./results/analysis/",method,
+  homogeneity   <- readRDS(paste0("./data/analysis/",method,
                                   "/internal_perf_",
                                   derivation_predictor,
                                   derivation_predictor,".rds"))

@@ -14,14 +14,15 @@ source(file = "./rcode/analysis/descriptives.R")
 source(file = "./rcode/analysis/analyse_data.R")
 source(file = "./rcode/visualisation/gen_tables_maintext.R")
 source(file = "./rcode/visualisation/gen_graph_maintext.R")
+source(file = "./rcode/visualisation/gen_graph_supp2.R")
 
 # Load data  ----
 #------------------------------------------------------------------------------#
 # Read in data, for example:
-original <- readRDS("MH_Fram_Data.rds")
+original <- readRDS("./data/raw_data/simulated_data.rds")
 
 # Remarks:
-### Optially, use simulated data (Rcode here)
+### Optially, use simulated data (Rcode ./data/raw_data/data_simulation.R)
 ### Make sure output variable is coded with 0/1 for no/yes event
 ### Make sure data does not contain missing values
 
@@ -36,7 +37,6 @@ data <- standardize_data(inputdata = original,
 
 # Generate descriptives  ----
 #------------------------------------------------------------------------------#
-
 analyze_descriptives(standardized = data,
                      original = original)
 
@@ -58,9 +58,9 @@ use_analysis_scenarios <- expand.grid(method = c("ML", "Ridge"),
                                       derivation_predictor = c("X","W"),
                                       validation_predictor = c("X","W"))
 
-# Store apparent performance in .results/analysis/method/method_apparent_perf.rds
-# Store internal performance in .results/analysis/method/method_internal_perf.rds,
-# including coordinates for calibrationslopes in .results/analysis/calslope/
+# Store apparent performance in ./data/analysis/method/method_apparent_perf.rds
+# Store internal performance in ./data/analysis/method/method_internal_perf.rds,
+# including coordinates for calibrationslopes in ./data/analysis/calslope/
 apply(use_analysis_scenarios,
       MARGIN = 1,
       FUN = analyse_data,
@@ -83,7 +83,7 @@ table_homogeneity <- rbind(
                                 validation_predictor = "W",
                                 data = data)
 )
-
+# Save output table
 print(xtable(table_homogeneity),
       file = "./results/tables/measurement_homogeneity.txt",
       include.rownames = FALSE)
@@ -101,13 +101,22 @@ table_heterogeneity <- rbind(
                                   data = data)
 )
 
+# Save output table
 print(xtable(table_heterogeneity),
       file = "./results/tables/measurement_heterogeneity.txt",
       include.rownames = FALSE)
 
 # Generate summary figure (main text article)  ----
 #------------------------------------------------------------------------------#
+# This function does not require arguments, but relies on the output generated 
+# under "Analyse data" above
 perf_plot_calLarge()
 
 # Generate calibration plot (supplementary file)  ----
 #------------------------------------------------------------------------------#
+# Add plot with smooth calibration slopes, shown in supplementary file 2. This 
+# example code shows the output for Maximum likelihood fit under predictor measurement
+# heterogeneity (derivation measurement = X, validation measurement = W)
+generate_spaghettiplot(perfmeasurex = readRDS("./data/analysis/calslope/ML_calslope_XW_xaxis.rds"),
+                       perfmeasurey = readRDS("./data/analysis/calslope/ML_calslope_XW_yaxis.rds"),
+                       B = bootstrap_rep)

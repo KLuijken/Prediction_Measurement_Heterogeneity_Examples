@@ -31,10 +31,10 @@ apparent_performance <- function(method,
                                           method = method,
                                           lp = lp))
   # Save measures and output
-  saveRDS(results_apparent, file = paste0("./results/analysis/",method,"/apparent_perf_",
+  saveRDS(results_apparent, file = paste0("./data/analysis/",method,"/apparent_perf_",
                                   derivation_predictor,".rds"))
   
-  pdf(paste("./results/analysis/",method,"_apparent_perf_",
+  pdf(paste("./results/apparent_performance/",method,"_apparent_perf_",
             derivation_predictor,".pdf",sep = ""))
   adjusted_val.prob(lp,data$Y)
   dev.off()

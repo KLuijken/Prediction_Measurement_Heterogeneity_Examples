@@ -67,7 +67,7 @@ internal_performance <- function(method,
   results_internal <- cbind(results_bootstrap,
                             optimism,
                             seed = seed,
-                            file_name = paste0("./results/analysis/",method,
+                            file_name = paste0("./data/analysis/",method,
                                                "/internal_perf_",
                                                derivation_predictor,
                                                validation_predictor,".rds"))
@@ -82,9 +82,12 @@ internal_performance <- function(method,
                                              by = round(nrow(data)/20)),
                                          nrow(data))]
   calibrationslopex <- data.table(cbind(seed = seed, 
-                             t(calibrationslopex),
-                            file_name = paste0("./results/analysis/calslope/",
-                     method,"_calslope_x.rds")))
+                                        t(calibrationslopex)))
+  calibrationslopex$file_name <- paste0("./data/analysis/calslope/",
+                                                    method,"_calslope_",
+                                        derivation_predictor, 
+                                        validation_predictor,
+                                        "_xaxis.rds")
   save_result(calibrationslopex)
   
   calibrationslopey <- lowess(expit_lp,
@@ -93,9 +96,12 @@ internal_performance <- function(method,
                                               by = round(nrow(data)/20)),
                                           nrow(data))]
   calibrationslopey <- data.table(cbind(seed = seed, 
-                             t(calibrationslopey),
-                             file_name = paste0("./results/analysis/calslope/",
-                                                method,"_calslope_y.rds")))
+                             t(calibrationslopey)))
+  calibrationslopey$file_name <- paste0("./data/analysis/calslope/",
+                                                method,"_calslope_",
+                                        derivation_predictor, 
+                                        validation_predictor,
+                                        "_yaxis.rds")
   save_result(calibrationslopey)
 
 }
