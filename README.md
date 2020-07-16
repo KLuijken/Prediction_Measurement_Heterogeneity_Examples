@@ -6,13 +6,13 @@ To cite this repository, please use “  ”
 Code of the data analysis from the manuscript "Changing predictor measurement procedures affected the performance of prediction models in clinical examples" (https://doi.org/10.1016/j.jclinepi.2019.11.001).
 
 ## Run analysis
-The script in ./rcode/exe runs the analysis and generates figures at once.
-An explainer of the code can be found in ./docs/code_explainer.html
+The script in ./rcode/exe runs the analysis and generates figures at once.  
+An explainer of the code can be found in ./docs/Code_Explainer.html
 
 ## Generating tables and figures
 The R code in ./rcode/visualisation creates figures depicting the results of the analysis. The script produces .pdf and .txt files. The scripts uses the .rds files available in ./data/analysis. The output of the script is saved in ./results/.
 
-Attached packages:
+Attached packages:  
 rms_5.1-4  
 glmnet_4.0  
 data.table_1.12.8  
