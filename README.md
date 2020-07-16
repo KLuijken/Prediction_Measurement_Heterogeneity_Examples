@@ -1,6 +1,5 @@
 # Prediction_Measurement_Heterogeneity_Examples
-
-To cite this repository, please use “  ”
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3948437.svg)](https://doi.org/10.5281/zenodo.3948437)
 
 ## Version 1.1.0
 Code of the data analysis from the manuscript "Changing predictor measurement procedures affected the performance of prediction models in clinical examples" (https://doi.org/10.1016/j.jclinepi.2019.11.001).
@@ -49,5 +48,6 @@ Matrix_1.2-18
     └── visualisation        <- Scripts for visualisation of results (tables and figures)
 
 
-
+## Citation
+To cite this repository, please use “KLuijken. (2020, July 16). KLuijken/Prediction_Measurement_Heterogeneity_Examples (Version v.1.1.1). Zenodo. http://doi.org/10.5281/zenodo.3948437”
 
