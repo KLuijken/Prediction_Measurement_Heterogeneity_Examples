@@ -46,8 +46,9 @@ Matrix_1.2-18
     ├── nhanes_example       <- Stand-alone analysis to produce illustration of measurement heterogeneity using nhanes data
     ├── packages             <- Required dependencies
     └── visualisation        <- Scripts for visualisation of results (tables and figures)
-
+```
 
 ## Citation
+
 To cite this repository, please use “KLuijken. (2020, July 16). KLuijken/Prediction_Measurement_Heterogeneity_Examples (Version v.1.1.1). Zenodo. http://doi.org/10.5281/zenodo.3948437”
 
