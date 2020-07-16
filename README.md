@@ -6,7 +6,7 @@ To cite this repository, please use “  ”
 Code of the data analysis from the manuscript "Changing predictor measurement procedures affected the performance of prediction models in clinical examples" (https://doi.org/10.1016/j.jclinepi.2019.11.001).
 
 ## Run analysis
-The script in ./rcode/exe runs the analysis and generates figures at once.  
+The script in ./rcode/exe runs the analysis and generates figures at once. For 500 bootstrap repetitions, this takes around 2 hours.  
 An explainer of the code can be found in ./docs/Code_Explainer.html
 
 ## Generating tables and figures
