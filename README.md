@@ -7,7 +7,7 @@ Code of the data analysis from the manuscript "Changing predictor measurement pr
 
 ## Run analysis
 The script in ./rcode/exe runs the analysis and generates figures at once. For 500 bootstrap repetitions, this takes around 2 hours.  
-An explainer of the code can be found in ./docs/Code_Explainer.html
+An explainer of the code can be found [here](https://kluijken.github.io/Prediction_Measurement_Heterogeneity_Examples/Code_Explainer)
 
 ## Generating tables and figures
 The R code in ./rcode/visualisation creates figures depicting the results of the analysis. The script produces .pdf and .txt files. The scripts uses the .rds files available in ./data/analysis. The output of the script is saved in ./results/.
