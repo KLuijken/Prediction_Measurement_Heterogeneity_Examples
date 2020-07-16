@@ -36,7 +36,7 @@ apparent_performance <- function(method,
   
   pdf(paste("./results/apparent_performance/",method,"_apparent_perf_",
             derivation_predictor,".pdf",sep = ""))
-  adjusted_val.prob(lp,data$Y)
+  invisible(val.prob(expit(lp),data$Y))
   dev.off()
   
   return(results_apparent)

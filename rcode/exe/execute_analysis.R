@@ -46,7 +46,7 @@ analyze_descriptives(standardized = data,
 #------------------------------------------------------------------------------#
 
 # Set number of bootstrap repetitions
-bootstrap_rep <- 10
+bootstrap_rep <- 500
 
 # Store seeds
 set.seed(57)

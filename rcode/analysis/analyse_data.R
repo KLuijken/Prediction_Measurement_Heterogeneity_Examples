@@ -9,7 +9,6 @@
 
 # Load libraries  ----
 #------------------------------------------------------------------------------#
-source("./rcode/analysis/helpers/adjusted_valprob.R")
 source("./rcode/analysis/helpers/estimate_models.R")
 source("./rcode/analysis/helpers/performance_measures.R")
 source("./rcode/analysis/helpers/workflow_apparent_performance.R")
@@ -28,7 +27,7 @@ analyse_data <- function(analysis_scenarios, data, bootstrap_rep, seeds){
                        validation_predictor = analysis_scenarios[['validation_predictor']])
   
   # Internal predictive performance (bootstrap) ----
-
+  
   for(i in 1:bootstrap_rep) {
     set.seed(seeds[i])
     k         <- sample(1:nrow(data), 

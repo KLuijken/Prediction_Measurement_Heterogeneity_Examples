@@ -39,7 +39,7 @@ scale_brier <- function(lp, Brierscore){
 # Estimate performance measures
 estimate_performance <- function(lp, Y){
   pred  <- expit(lp)
-  store <- val.prob(pred, Y)
+  store <- val.prob(pred, Y, pl = F)
   
   cal_large    <- as.numeric(store[["Intercept"]])
   cal_slope    <- as.numeric(store[["Slope"]])
