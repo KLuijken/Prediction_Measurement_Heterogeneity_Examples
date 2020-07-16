@@ -13,16 +13,16 @@ An explainer of the code can be found in ./docs/code_explainer.html
 The R code in ./rcode/visualisation creates figures depicting the results of the analysis. The script produces .pdf and .txt files. The scripts uses the .rds files available in ./data/analysis. The output of the script is saved in ./results/.
 
 Attached packages:
-rms_5.1-4
-glmnet_4.0
-data.table_1.12.8
-xtable_1.8-4
-summarytools_0.9.6
-ggplot2_3.3.0
- 
-When data are simulated:
-MASS_7.3-51.5 
-Matrix_1.2-18
+rms_5.1-4  
+glmnet_4.0  
+data.table_1.12.8  
+xtable_1.8-4  
+summarytools_0.9.6  
+ggplot2_3.3.0  
+   
+When data are simulated:  
+MASS_7.3-51.5   
+Matrix_1.2-18  
 
 ## Project organization
 
