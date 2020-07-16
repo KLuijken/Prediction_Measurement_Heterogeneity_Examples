@@ -3,8 +3,8 @@
 # K Luijken
 #
 # Execute script to process + analyze + visualize data
+# Executing this analysis for 500 bootstrap repetitions takes around 2 hours
 #------------------------------------------------------------------------------#
-
 
 # Load librairies + source code ----
 #------------------------------------------------------------------------------#
